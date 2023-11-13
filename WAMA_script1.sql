@@ -91,11 +91,11 @@ CREATE TABLE TeacherEmails (
 -- -----------------------------------------------------
 
 CREATE TABLE School (
-    schoolName VARCHAR(11) NOT NULL,
+    schoolName VARCHAR(50) NOT NULL,
     street VARCHAR(50),
     town VARCHAR(50) NOT NULL,
     county VARCHAR(10) NOT NULL,
-    zipCode VARCHAR(7) NOT NULL,
+    zipCode VARCHAR(10) NOT NULL,
     phoneNumber VARCHAR(10) NOT NULL,
     website VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
@@ -108,10 +108,11 @@ CREATE TABLE School (
 
 CREATE TABLE Lesson (
     lessonCode INT AUTO_INCREMENT NOT NULL,
-    length INT NOT NULL,
+    length TEXT NOT NULL,
+    instrument VARCHAR(50) NOT NULL,
     PRIMARY KEY (lessonCode),
     PPS VARCHAR(9),
-    schoolName VARCHAR(11),
+    schoolName VARCHAR(50),
     FOREIGN KEY (PPS)
         REFERENCES Teacher (PPS),
     FOREIGN KEY (schoolName)
@@ -124,11 +125,15 @@ CREATE TABLE Lesson (
 
 CREATE TABLE Exam (
     examId INT AUTO_INCREMENT NOT NULL,
-    examType VARCHAR(11) NOT NULL,
+    examType VARCHAR(50) NOT NULL,
     instrument VARCHAR(50) NOT NULL,
     grade VARCHAR(20),
     examYear INT,
-    PRIMARY KEY (examId)
+    examDate DATE,
+    studentId INT,
+    PRIMARY KEY (examId),
+    FOREIGN KEY (studentId)
+		REFERENCES Student (studentId)
 );
 
 -- -----------------------------------------------------
@@ -138,11 +143,11 @@ CREATE TABLE Exam (
 CREATE TABLE GroupLesson (
     groupCode INT AUTO_INCREMENT NOT NULL,
     groupSubject VARCHAR(50) NOT NULL,
-    length INT NOT NULL,
+    length VARCHAR(50) NOT NULL,
     groupSize INT NOT NULL,
-    ageBracket VARCHAR(5) NOT NULL,
+    ageBracket VARCHAR(50) NOT NULL,
     PPS VARCHAR(9),
-    schoolName VARCHAR(11),
+    schoolName VARCHAR(50),
     PRIMARY KEY (groupCode),
     FOREIGN KEY (PPS)
         REFERENCES Teacher (PPS),
@@ -158,7 +163,9 @@ CREATE TABLE Participates (
     studentId INT,
     groupCode INT,
 	attendance VARCHAR(5) NOT NULL,
-    groupLessondate DATE,
+    groupLessonTime TIME,
+    groupLessonDay VARCHAR(10),
+    groupLessonDate DATE,
     PRIMARY KEY (studentId, groupCode),
     FOREIGN KEY (studentId) REFERENCES Student (studentId),
     FOREIGN KEY (groupCode) REFERENCES GroupLesson (groupCode)
@@ -172,6 +179,8 @@ CREATE TABLE Attends (
 	studentId INT,
     lessonCode INT,
     progress BLOB,
+    lessonTime TIME,
+    lessonDay VARCHAR(10),
     lessonDate DATE,
     PRIMARY KEY (studentId , lessonCode),
     FOREIGN KEY (studentId)
