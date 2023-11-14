@@ -127,10 +127,10 @@ CREATE TABLE Exam (
     examId INT AUTO_INCREMENT NOT NULL,
     examType VARCHAR(50) NOT NULL,
     instrument VARCHAR(50) NOT NULL,
-    grade VARCHAR(20),
-    examYear INT,
+    grade VARCHAR(20) NOT NULL,
+    examYear VARCHAR(4) NOT NULL,
     examDate DATE,
-    studentId INT,
+    studentId INT NOT NULL,
     PRIMARY KEY (examId),
     FOREIGN KEY (studentId)
 		REFERENCES Student (studentId)
@@ -160,12 +160,12 @@ CREATE TABLE GroupLesson (
 -- -----------------------------------------------------
 
 CREATE TABLE Participates (
-    studentId INT,
-    groupCode INT,
-	attendance VARCHAR(5) NOT NULL,
-    groupLessonTime TIME,
-    groupLessonDay VARCHAR(10),
-    groupLessonDate DATE,
+    studentId INT NOT NULL,
+    groupCode INT NOT NULL,
+	attendance VARCHAR(7) NOT NULL,
+    groupLessonTime VARCHAR(5) NOT NULL,
+    groupLessonDay VARCHAR(10) NOT NULL,
+    groupLessonDate DATE NOT NULL,
     PRIMARY KEY (studentId, groupCode),
     FOREIGN KEY (studentId) REFERENCES Student (studentId),
     FOREIGN KEY (groupCode) REFERENCES GroupLesson (groupCode)
@@ -178,8 +178,8 @@ CREATE TABLE Participates (
 CREATE TABLE Attends (
 	studentId INT,
     lessonCode INT,
-    progress BLOB,
-    lessonTime TIME,
+    progress TEXT,
+    lessonTime VARCHAR(5),
     lessonDay VARCHAR(10),
     lessonDate DATE,
     PRIMARY KEY (studentId , lessonCode),

@@ -16,9 +16,13 @@ DELETE FROM Lesson;
 
 DELETE FROM School;
 
+DELETE FROM Participates;
+
 ALTER TABLE Student AUTO_INCREMENT = 1;
 
 ALTER TABLE Lesson AUTO_INCREMENT = 1;
+
+ALTER TABLE Exam AUTO_INCREMENT = 1;
 
 ALTER TABLE groupLesson AUTO_INCREMENT = 1;
 
@@ -415,286 +419,295 @@ VALUES
 
 INSERT INTO Lesson (length, instrument, PPS, schoolName)
 VALUES
-/*Sean Murphy Piano Lessons
-/*monday 3pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
+/*Sean Murphy Piano Lessons*/
 /*tuesday 4pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
 
 /*Aoife Guitar Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),	
 
 /*Ciarán Drum Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
 
 /*Niamh Trumpet Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
 
 /*Eoin Banjo Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
 
 /*Sile Viola Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'), 
 
 /*Padraig Piano Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*monday 3:30pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
 
 /*Aisling Voice Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'), 
-/*monday 3:30pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
 
 /*Daragh Flute Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Flute', '890123456', 'Waterford Academy of Music and Art'), 
-/*monday 3:30pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*monday 4pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
 
 /*Grainne Ukulele Lessons*/
-/*monday 3pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'), 
-/*monday 3:30pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'), 
-/*monday 4pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*monday 4:30pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*monday 5pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 3pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 3:30pm*/
-('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
 /*tuesday 4pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
 /*tuesday 4:30pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
 /*tuesday 5pm*/
+('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
+/*tuesday 5:30pm*/
+('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
+/*tuesday 6pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art');
 
+INSERT INTO Attends(studentId, lessonCode, progress, lessonTime, lessonDay, lessonDate)
+VALUES
+/*piano*/
+('1', '1', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('3', '2', 'More practice needed', '16:30', 'Tuesday', '2023-9-5'),
+('10', '3', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('11', '4', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('12', '5', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
+/*guitar*/
+('14', '6', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('16', '7', 'More practice needed', '16:30', 'Tuesday', '2023-9-5'),
+('18', '8', 'Continues to improve', '17:00', 'Tuesday', '2023-9-5'),
+('19', '9', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('20', '10', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
+/*drums*/
+('21', '11', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('22', '12', 'Continues to improve', '16:30', 'Tuesday', '2023-9-5'),
+('24', '13', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('25', '14', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('26', '15', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
+/*trumpet*/
+('28', '16', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('29', '17', 'Good work', '16:30', 'Tuesday', '2023-9-5'),
+('31', '18', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('32', '19', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('33', '20', 'Good work', '18:00', 'Tuesday', '2023-9-5'),
+/*banjo*/
+('34', '21', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('36', '22', 'Excellent work', '16:30', 'Tuesday', '2023-9-5'),
+('37', '23', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('38', '24', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('42', '25', 'No practice this week', '18:00', 'Tuesday', '2023-9-5'),
+/*viola*/
+('43', '26', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('44', '27', 'Excellent work', '16:30', 'Tuesday', '2023-9-5'),
+('45', '28', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('46', '29', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('47', '30', 'sight reading needs work', '18:00', 'Tuesday', '2023-9-5'),
+/*piano*/
+('48', '31', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('51', '32', 'Ok work', '16:30', 'Tuesday', '2023-9-5'),
+('52', '33', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('53', '34', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('54', '35', 'sight reading has improved', '18:00', 'Tuesday', '2023-9-5'),
+/*voice*/
+('55', '36', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('56', '37', 'Ok work', '16:30', 'Tuesday', '2023-9-5'),
+('58', '38', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('59', '39', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('60', '40', 'Well done', '18:00', 'Tuesday', '2023-9-5'),
+/*flute*/
+('61', '41', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
+('62', '42', 'Great work', '16:30', 'Tuesday', '2023-9-5'),
+('63', '43', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('64', '44', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
+('65', '45', 'Excellent work this week', '18:00', 'Tuesday', '2023-9-5'),
+/*ukulele*/
+('66', '46', 'Good work', '16:00', 'Tuesday', '2023-9-5'),
+('67', '47', 'Great work', '16:30', 'Tuesday', '2023-9-5'),
+('68', '48', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
+('69', '49', 'Good work', '17:30', 'Tuesday', '2023-9-5'),
+('70', '50', 'Great work', '18:00', 'Tuesday', '2023-9-5');
+
+INSERT INTO Exam(examType, instrument, grade, examYear, examDate, studentId)
+VALUES
+('RIAM', 'Piano', '5', '2024', NULL, '1'),
+('RIAM', 'Piano', '3', '2023', '2023-11-07', '3'),
+('RIAM', 'Piano', '1', '2023', '2023-11-07', '10'),
+('RIAM', 'Piano', '1', '2023', '2023-11-07', '11'),
+('RIAM', 'Piano', 'Preliminary', '2024', NULL, '12'),
+('RIAM', 'Piano', '8', '2024', NULL, '14');
 
 INSERT INTO groupLesson(groupSubject, length, groupSize, ageBracket, PPS, schoolName)
 VALUES
-/*wednesday 3pm Sean*/
-('Piano', '1 hour', '5', '2nd Class', '123456789', 'Waterford Academy of Music and Art'),
 /*wednesday 3pm Padraig*/
 ('Piano', '1 hour', '5', '2nd Class', '789012345', 'Waterford Academy of Music and Art'),
-/*wednesday 3pm Aoife*/
-('Guitar', '1 hour', '5', '2nd Class', '234567890', 'Waterford Academy of Music and Art'),
 /*wednesday 3pm Grainne*/
 ('Ukulele', '1 hour', '5', '2nd Class', '012345678', 'Waterford Academy of Music and Art'),
 /*wednesday 4pm Aoife*/
-('Guitar', '1 hour', '5', '2nd Class', '234567890', 'Waterford Academy of Music and Art'),
+('Guitar', '1 hour', '5', '3rd Class', '234567890', 'Waterford Academy of Music and Art'),
 /*wednesday 5pm Pat*/
 ('Drama', '1 hour 30 minutes', '10', '5th year', '978654321', 'Waterford Academy of Music and Art'),
 /*wednesday 6:30pm Robyn*/
 ('Dance', '1 hour 30 minutes', '10', '5th year', '878654321', 'Waterford Academy of Music and Art'),
 /*thursday 3pm Aoife*/
-('Guitar', '1 hour', '5', '4th Class', '234567890', 'Waterford Academy of Music and Art'),
+('Guitar', '1 hour', '4', '4th Class', '234567890', 'Waterford Academy of Music and Art'),
  /*thursday 3pm Grainne*/
 ('Ukulele', '1 hour', '5', '4th Class', '012345678', 'Waterford Academy of Music and Art'),
 /*thursday 4pm Pat*/
-('Drama', '1 hour 30 minutes', '10', '6th class', '978654321', 'Waterford Academy of Music and Art'),
+('Drama', '1 hour 30 minutes', '9', '6th class', '978654321', 'Waterford Academy of Music and Art'),
 /*thursday 5:30pm Robyn*/
-('Dance', '1 hour 30 minutes', '10', '6th class', '878654321', 'Waterford Academy of Music and Art');
+('Dance', '1 hour 30 minutes', '9', '6th class', '878654321', 'Waterford Academy of Music and Art');
 
-/*
+INSERT INTO Participates (studentId, groupCode, attendance, groupLessonTime, groupLessonDay, groupLessonDate)
+VALUES
+/*wed 3pm piano*/
+('91', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('92', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('93', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('94', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('95', '1', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
+/*wed 3pm ukulele*/
+('96', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('97', '2', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
+('98', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('99', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
+('100', '2', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
+/*wed 4pm guitar*/
+('4', '3', 'Present', '16:00', 'Wednesday', '2023-9-6'),
+('5', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
+('6', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
+('15', '3', 'Present', '16:00', 'Wednesday', '2023-9-6'),
+('17', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
+/*wed 5pm drama*/
+('13', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('23', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('27', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('30', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('35', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('19', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('40', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('41', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('49', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('57', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+/*wed 6:30pm drama*/
+('13', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('23', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('27', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('30', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('35', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('19', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('40', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+('41', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('49', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
+('57', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
+/*thurs 3pm guitar*/
+('81', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('82', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('83', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('84', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
+/*thurs 3pm ukulele*/
+('86', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('87', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('88', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('89', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
+('90', '7', 'Absent', '15:00', 'Thursday', '2023-9-7'),
+/*thurs 4pm drama*/
+('71', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('72', '8', 'Absent', '16:00', 'Thursday', '2023-9-7'),
+('73', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('74', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('75', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('76', '8', 'Absent', '16:00', 'Thursday', '2023-9-7'),
+('77', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('78', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('79', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('80', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
+/*thurs 5:30pm dance*/
+('71', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('72', '9', 'Absent', '16:00', 'Thursday', '2023-9-7'),
+('73', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('74', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('75', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('76', '9', 'Absent', '16:00', 'Thursday', '2023-9-7'),
+('77', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('78', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('79', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
+('80', '9', 'Present', '16:00', 'Thursday', '2023-9-7');
 
 
-
-CREATE TABLE Participates (
-    studentId INT,
-    groupCode INT,
-	attendance VARCHAR(5) NOT NULL,
-    groupLessonTime TIME,
-    groupLessonDay VARCHAR(10),
-    groupLessonDate DATE,
-    PRIMARY KEY (studentId, groupCode),
-    FOREIGN KEY (studentId) REFERENCES Student (studentId),
-    FOREIGN KEY (groupCode) REFERENCES GroupLesson (groupCode)
-);
-
--- -----------------------------------------------------
--- Create table Attends
--- -----------------------------------------------------
-
-CREATE TABLE Attends (
-	studentId INT,
-    lessonCode INT,
-    progress BLOB,
-    lessonTime TIME,
-    lessonDay VARCHAR(10),
-    lessonDate DATE,
-    PRIMARY KEY (studentId , lessonCode),
-    FOREIGN KEY (studentId)
-        REFERENCES Student (studentId),
-    FOREIGN KEY (lessonCode)
-        REFERENCES Lesson (lessonCode)
-);
-
-*/
     
 
