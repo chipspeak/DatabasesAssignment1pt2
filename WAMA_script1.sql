@@ -42,6 +42,7 @@ CREATE TABLE Parent (
     PRIMARY KEY (phoneNumber),
     FOREIGN KEY (studentId)
         REFERENCES Student (studentId)
+        ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -74,6 +75,7 @@ CREATE TABLE TeacherPhones (
     PRIMARY KEY (phoneNumber),
     FOREIGN KEY (PPS)
         REFERENCES Teacher (PPS)
+        ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -86,6 +88,7 @@ CREATE TABLE TeacherEmails (
     PRIMARY KEY (email),
     FOREIGN KEY (PPS)
         REFERENCES Teacher (PPS)
+        ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -116,7 +119,8 @@ CREATE TABLE Lesson (
     PPS VARCHAR(9),
     schoolName VARCHAR(50),
     FOREIGN KEY (PPS)
-        REFERENCES Teacher (PPS),
+        REFERENCES Teacher (PPS)
+        ON DELETE CASCADE,
     FOREIGN KEY (schoolName)
         REFERENCES School (schoolName)
 );
@@ -136,6 +140,7 @@ CREATE TABLE Exam (
     PRIMARY KEY (examId),
     FOREIGN KEY (studentId)
         REFERENCES Student (studentId)
+        ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -152,7 +157,8 @@ CREATE TABLE GroupLesson (
     schoolName VARCHAR(50),
     PRIMARY KEY (groupCode),
     FOREIGN KEY (PPS)
-        REFERENCES Teacher (PPS),
+        REFERENCES Teacher (PPS)
+        ON DELETE CASCADE,
     FOREIGN KEY (schoolName)
         REFERENCES School (schoolName)
 );
@@ -164,15 +170,17 @@ CREATE TABLE GroupLesson (
 CREATE TABLE Participates (
     studentId INT NOT NULL,
     groupCode INT NOT NULL,
-    attendance VARCHAR(7) NOT NULL,
+    attendance VARCHAR(50) NOT NULL,
     groupLessonTime VARCHAR(5) NOT NULL,
     groupLessonDay VARCHAR(10) NOT NULL,
     groupLessonDate DATE NOT NULL,
     PRIMARY KEY (studentId , groupCode),
     FOREIGN KEY (studentId)
-        REFERENCES Student (studentId),
+        REFERENCES Student (studentId)
+        ON DELETE CASCADE,
     FOREIGN KEY (groupCode)
         REFERENCES GroupLesson (groupCode)
+        ON DELETE CASCADE
 );
 
 -- -----------------------------------------------------
@@ -188,84 +196,127 @@ CREATE TABLE Attends (
     lessonDate DATE,
     PRIMARY KEY (studentId , lessonCode),
     FOREIGN KEY (studentId)
-        REFERENCES Student (studentId),
+        REFERENCES Student (studentId)
+        ON DELETE CASCADE,
     FOREIGN KEY (lessonCode)
         REFERENCES Lesson (lessonCode)
+        ON DELETE CASCADE
 );
 
+-- -----------------------------------------------------
+-- Triggers
+-- -----------------------------------------------------
+
+CREATE TABLE lessonProgress (
+    reportId INT AUTO_INCREMENT PRIMARY KEY,
+	studentId INT,
+    lessonCode INT,
+    lessonDay VARCHAR(10),
+    lessonDate DATE,
+    progress TEXT
+);
+
+DELIMITER $$
+CREATE TRIGGER beforeLessonProgressUpdate  
+    BEFORE UPDATE ON attends
+    FOR EACH ROW 
+BEGIN
+    INSERT INTO lessonProgress
+	SET studentId = OLD.studentId,
+	    lessonCode = OLD.lessonCode,
+        lessonTime = OLD.lessonTime,
+        lessonDay = OLD.lessonDay,
+        lessonDate = Old.lessonDate,
+        progress = OLD.progress;
+END $$
+DELIMITER ;
+
+CREATE TABLE groupAttendance (
+	reportId INT AUTO_INCREMENT PRIMARY KEY,
+    studentId INT NOT NULL,
+    groupCode INT NOT NULL,
+    attendance VARCHAR(50) NOT NULL,
+    groupLessonTime VARCHAR(5) NOT NULL,
+    groupLessonDay VARCHAR(10) NOT NULL,
+    groupLessonDate DATE NOT NULL
+);
+
+DELIMITER $$
+CREATE TRIGGER beforeGroupAttendanceUpdate 
+    BEFORE UPDATE ON participates
+    FOR EACH ROW 
+BEGIN
+    INSERT INTO groupAttendance
+    SET studentId = OLD.studentId,
+	    groupCode = OLD.groupCode,
+        groupLessonTime = OLD.groupLessonTime,
+        groupLessonDay = OLD.groupLessonDay,
+        groupLessonDate = Old.groupLessonDate,
+        attendance = OLD.attendance;
+END $$
+DELIMITER ;
+	
 -- -----------------------------------------------------
 -- Data input
 -- -----------------------------------------------------
 
 DELETE FROM TeacherEmails;
-
 DELETE FROM TeacherPhones;
-
 DELETE FROM Teacher;
-
--- Delete all rows from the Parent table
 DELETE FROM Parent;
-
--- Delete all rows from the Student table
 DELETE FROM Student;
-
 DELETE FROM Lesson;
-
 DELETE FROM School;
-
 DELETE FROM Participates;
 
 ALTER TABLE Student AUTO_INCREMENT = 1;
-
 ALTER TABLE Lesson AUTO_INCREMENT = 1;
-
 ALTER TABLE Exam AUTO_INCREMENT = 1;
-
 ALTER TABLE groupLesson AUTO_INCREMENT = 1;
 
 INSERT INTO Student (firstName, lastName, DOB, street, town, county, zipCode)
 VALUES
 ('Emma', 'Smith', '2007-12-05', '123 Main St', 'Waterford', 'Waterford', 'X1Y 2Z3'),
-('Liam', 'Johnson', '2013-08-18', '456 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'), /*4th class*/
+('Liam', 'Johnson', '2013-08-18', '456 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'), 
 ('Olivia', 'Williams', '2009-04-03', '789 Pine St', 'Waterford', 'Waterford', 'M5N 8P2'), 
-('Noah', 'Brown', '2015-09-21', '101 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'), /*third class*/
-('Ava', 'Taylor', '2015-02-10', '202 Maple St', 'Waterford', 'Waterford', 'L8K 4W6'), /*third class*/
-('Sophia', 'Jones', '2015-11-27', '303 Birch St', 'Waterford', 'Waterford', 'P2Q 7E9'), /*third class*/
-('Jackson', 'Miller', '2016-06-14', '404 Elm St', 'Waterford', 'Waterford', 'N3M 2R8'), /*second class*/
-('Oliver', 'Davis', '2017-03-30', '505 Oak St', 'Waterford', 'Waterford', 'K7L 9J4'), /*second class*/
-('Emma', 'Martin', '2017-07-19', '606 Cedar St', 'Waterford', 'Waterford', 'H8P 4X2'), /*second class*/
+('Noah', 'Brown', '2015-09-21', '101 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'), 
+('Ava', 'Taylor', '2015-02-10', '202 Maple St', 'Waterford', 'Waterford', 'L8K 4W6'), 
+('Sophia', 'Jones', '2015-11-27', '303 Birch St', 'Waterford', 'Waterford', 'P2Q 7E9'), 
+('Jackson', 'Miller', '2016-06-14', '404 Elm St', 'Waterford', 'Waterford', 'N3M 2R8'), 
+('Oliver', 'Davis', '2017-03-30', '505 Oak St', 'Waterford', 'Waterford', 'K7L 9J4'), 
+('Emma', 'Martin', '2017-07-19', '606 Cedar St', 'Waterford', 'Waterford', 'H8P 4X2'), 
 ('Liam', 'Hill', '2010-01-02', '707 Pine St', 'Waterford', 'Waterford', 'T1H 5E6'),
 ('Amelia', 'Young', '2014-05-13', '808 Birch St', 'Waterford', 'Waterford', 'V5M 7S9'),
 ('Lucas', 'Cooper', '2003-10-27', '909 Maple St', 'Waterford', 'Waterford', 'J6R 3T2'),
-('Ava', 'Ward', '2006-04-08', '101 Oak St', 'Waterford', 'Waterford', 'Z2X 8Y7'), /*5th year*/
+('Ava', 'Ward', '2006-04-08', '101 Oak St', 'Waterford', 'Waterford', 'Z2X 8Y7'), 
 ('Liam', 'Cox', '2007-11-25', '202 Pine St', 'Waterford', 'Waterford', 'R3S 1A6'),
-('Olivia', 'Kelly', '2015-08-12', '303 Birch St', 'Waterford', 'Waterford', 'N7L 6K9'), /*third class*/
+('Olivia', 'Kelly', '2015-08-12', '303 Birch St', 'Waterford', 'Waterford', 'N7L 6K9'), 
 ('Noah', 'Murphy', '2005-02-17', '404 Cedar St', 'Waterford', 'Waterford', 'K4P 9Q8'),
-('Sophia', 'Baker', '2015-07-09', '505 Elm St', 'Waterford', 'Waterford', 'T8H 2E4'), /*third class*/
+('Sophia', 'Baker', '2015-07-09', '505 Elm St', 'Waterford', 'Waterford', 'T8H 2E4'),
 ('Jackson', 'Harrison', '2008-04-03', '606 Oak St', 'Waterford', 'Waterford', 'H1Y 3T6'),
 ('Oliver', 'Fisher', '2005-09-22', '707 Pine St', 'Waterford', 'Waterford', 'X5V 2R4'), 
 ('Emma', 'Barnes', '2004-01-01', '808 Maple St', 'Waterford', 'Waterford', 'Z9W 4Q7'),
 ('Liam', 'Reed', '2007-06-14', '909 Cedar St', 'Waterford', 'Waterford', 'L3M 8N2'),
 ('Ava', 'Dennis', '2007-12-14', '707 Cedar St', 'Waterford', 'Waterford', 'R6S 7K1'),
-('Liam', 'French', '2006-05-30', '808 Oak St', 'Waterford', 'Waterford', 'K2G 4H9'), /*5th year*/
+('Liam', 'French', '2006-05-30', '808 Oak St', 'Waterford', 'Waterford', 'K2G 4H9'), 
 ('Olivia', 'Conner', '2009-10-19', '909 Birch St', 'Waterford', 'Waterford', 'J7T 6P5'),
 ('Noah', 'Lambert', '2008-04-02', '101 Maple St', 'Waterford', 'Waterford', 'W4X 2V1'),
 ('Sophia', 'Keller', '2003-09-17', '202 Cedar St', 'Waterford', 'Waterford', 'Y3Z 7R8'),
-('Jackson', 'Austin', '2007-03-06', '303 Elm St', 'Waterford', 'Waterford', 'A4B 8C9'), /*5th year*/
+('Jackson', 'Austin', '2007-03-06', '303 Elm St', 'Waterford', 'Waterford', 'A4B 8C9'), 
 ('Oliver', 'Shaw', '2004-08-21', '404 Pine St', 'Waterford', 'Waterford', 'L1N 5E6'),
 ('Emma', 'Cohen', '2003-01-10', '505 Oak St', 'Waterford', 'Waterford', 'P9Q 2M4'),
-('Liam', 'Bates', '2006-06-25', '606 Birch St', 'Waterford', 'Waterford', 'X2T 7W3'), /*5th year*/
+('Liam', 'Bates', '2006-06-25', '606 Birch St', 'Waterford', 'Waterford', 'X2T 7W3'), 
 ('Amelia', 'Hale', '2005-12-08', '707 Maple St', 'Waterford', 'Waterford', 'R5S 4K8'),
 ('Lucas', 'Lloyd', '2002-05-27', '808 Cedar St', 'Waterford', 'Waterford', 'K3R 5T8'),
 ('Ava', 'Fitzgerald', '2007-10-12', '909 Elm St', 'Waterford', 'Waterford', 'Y2Z 8X1'),
 ('Liam', 'Maxwell', '2008-04-01', '101 Birch St', 'Waterford', 'Waterford', 'A3B 7C9'),
-('Sophia', 'Ortega', '2006-03-27', '606 Maple St', 'Waterford', 'Waterford', 'L1N 5E6'), /*5th year*/
+('Sophia', 'Ortega', '2006-03-27', '606 Maple St', 'Waterford', 'Waterford', 'L1N 5E6'), 
 ('Jackson', 'Goodman', '2011-08-12', '707 Cedar St', 'Waterford', 'Waterford', 'P9Q 2M4'),
 ('Oliver', 'Bauer', '2008-02-01', '808 Elm St', 'Waterford', 'Waterford', 'X2T 7W3'),
 ('Ava', 'Hoover', '2008-02-10', '404 Pine St', 'Waterford', 'Waterford', 'X5V 2R4'),
-('Liam', 'Bender', '2006-07-25', '505 Oak St', 'Waterford', 'Waterford', 'Z9W 4Q7'), /*5th year*/
-('Ella', 'Clark', '2006-11-15', '111 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'), /*5th year*/
-('Mason', 'Lee', '2007-09-02', '222 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'), /*5th year*/
+('Liam', 'Bender', '2006-07-25', '505 Oak St', 'Waterford', 'Waterford', 'Z9W 4Q7'), 
+('Ella', 'Clark', '2006-11-15', '111 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'), 
+('Mason', 'Lee', '2007-09-02', '222 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'), 
 ('Scarlett', 'Lewis', '2005-04-11', '333 Pine St', 'Waterford', 'Waterford', 'M5N 8P2'),
 ('Logan', 'Adams', '2008-06-25', '444 Maple St', 'Waterford', 'Waterford', 'L8K 4W6'),
 ('Aria', 'Wright', '2003-02-14', '555 Birch St', 'Waterford', 'Waterford', 'P2Q 7E9'),
@@ -273,7 +324,7 @@ VALUES
 ('Avery', 'Allen', '2001-08-27', '777 Cedar St', 'Waterford', 'Waterford', 'K7L 9J4'),
 ('Leo', 'Hill', '2004-05-16', '888 Oak St', 'Waterford', 'Waterford', 'H8P 4X2'),
 ('Luna', 'Baker', '2005-03-02', '999 Pine St', 'Waterford', 'Waterford', 'T1H 5E6'),
-('Wyatt', 'Evans', '2006-12-12', '123 Birch St', 'Waterford', 'Waterford', 'V5M 7S9'), /*5th year*/
+('Wyatt', 'Evans', '2006-12-12', '123 Birch St', 'Waterford', 'Waterford', 'V5M 7S9'),
 ('Mia', 'Turner', '2002-10-10', '456 Maple St', 'Waterford', 'Waterford', 'J6R 3T2'), 
 ('Elijah', 'Cox', '2003-11-20', '789 Cedar St', 'Waterford', 'Waterford', 'Z2X 8Y7'),
 ('Zoe', 'Dunn', '2001-06-07', '101 Oak St', 'Waterford', 'Waterford', 'R3S 1A6'),
@@ -281,7 +332,7 @@ VALUES
 ('Hazel', 'Kelly', '2005-01-25', '303 Birch St', 'Waterford', 'Waterford', 'K4P 9Q8'),
 ('Grayson', 'Murphy', '2002-07-10', '404 Cedar St', 'Waterford', 'Waterford', 'T8H 2E4'),
 ('Aurora', 'Baker', '2003-03-14', '505 Elm St', 'Waterford', 'Waterford', 'H1Y 3T6'),
-('Caleb', 'Fisher', '2006-02-01', '606 Oak St', 'Waterford', 'Waterford', 'X5V 2R4'), /*5th year*/
+('Caleb', 'Fisher', '2006-02-01', '606 Oak St', 'Waterford', 'Waterford', 'X5V 2R4'), 
 ('Stella', 'Barnes', '2001-09-18', '707 Pine St', 'Waterford', 'Waterford', 'Z9W 4Q7'),
 ('Eli', 'Reed', '2007-11-02', '808 Maple St', 'Waterford', 'Waterford', 'L3M 8N2'),
 ('Aubrey', 'Dennis', '2004-05-18', '909 Cedar St', 'Waterford', 'Waterford', 'R6S 7K1'),
@@ -295,7 +346,6 @@ VALUES
 ('Hannah', 'Bates', '2005-06-25', '808 Elm St', 'Waterford', 'Waterford', 'X2T 7W3'),
 ('Axel', 'Hale', '2004-12-08', '909 Maple St', 'Waterford', 'Waterford', 'R5S 4K8'),
 ('Madison', 'Lloyd', '2001-05-27', '101 Pine St', 'Waterford', 'Waterford', 'K3R 5T8'),
-/*6th class*/
 ('Sophie', 'Anderson', '2011-04-15', '111 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'),
 ('Ethan', 'Smith', '2011-07-22', '222 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'),
 ('Isabella', 'Johnson', '2011-10-01', '333 Pine St', 'Waterford', 'Waterford', 'M5N 8P2'),
@@ -306,7 +356,6 @@ VALUES
 ('Carter', 'Davis', '2011-11-25', '888 Oak St', 'Waterford', 'Waterford', 'H8P 4X2'),
 ('Avery', 'Martin', '2011-03-18', '999 Pine St', 'Waterford', 'Waterford', 'T1H 5E6'),
 ('Leo', 'Hill', '2011-08-09', '123 Birch St', 'Waterford', 'Waterford', 'V5M 7S9'),
-/*4th class*/
 ('Sophie', 'Miller', '2014-04-15', '111 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'),
 ('Ethan', 'Wilson', '2014-07-22', '222 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'),
 ('Isabella', 'Moore', '2014-10-01', '333 Pine St', 'Waterford', 'Waterford', 'M5N 8P2'),
@@ -317,7 +366,6 @@ VALUES
 ('Carter', 'Fisher', '2014-11-25', '888 Oak St', 'Waterford', 'Waterford', 'H8P 4X2'),
 ('Avery', 'Wright', '2014-03-18', '999 Pine St', 'Waterford', 'Waterford', 'T1H 5E6'),
 ('Leo', 'Harrison', '2014-08-09', '123 Birch St', 'Waterford', 'Waterford', 'V5M 7S9'),
-/*2nd class*/
 ('Harper', 'Jones', '2016-04-15', '111 Cedar St', 'Waterford', 'Waterford', 'R9S 6T7'),
 ('Liam', 'Davis', '2016-07-22', '222 Oak St', 'Waterford', 'Waterford', 'A1B 3C4'),
 ('Aria', 'Martin', '2016-10-01', '333 Pine St', 'Waterford', 'Waterford', 'M5N 8P2'),
@@ -472,7 +520,6 @@ VALUES
 ('Ava', 'Hale', '0943889001', 'ava.hale234@example.com', '69'),
 ('Mason', 'Lloyd', '0944990112', 'mason.lloyd567@example.com', '70'),
 ('Mia', 'Lloyd', '0945001223', 'mia.lloyd890@example.com', '70'),
-/*new entries 6th class parents*/
 ('Ciaran', 'Anderson', '0801722324', 'ciaran.anderson@example.com', '71'),
 ('Siobhan', 'Anderson', '0802233435', 'siobhan.anderson@example.com', '71'),
 ('Finn', 'Smith', '0803344552', 'finn.smith@example.com', '72'),
@@ -493,7 +540,6 @@ VALUES
 ('Aislinn', 'Martin', '0819889002', 'aislinn.martin@example.com', '79'),
 ('Fionnuala', 'Hill', '0820990113', 'fionnuala.hill@example.com', '80'),
 ('Ciaran', 'Hill', '0822001224', 'ciaran.hill@example.com', '80'),
-/*new entries 4th class*/
 ('Sophie', 'Miller', '0123455115', 'sophie.miller@email.com', 81),
 ('Tom', 'Miller', '0123455226', 'tom.miller@email.com', 81),
 ('Ethan', 'Wilson', '0123455337', 'ethan.wilson@email.com', 82),
@@ -514,7 +560,6 @@ VALUES
 ('Ella', 'Wright', '0123455888', 'ella.wright@email.com', 89),
 ('Leo', 'Harrison', '0123455999', 'leo.harrison@email.com', 90),
 ('Lily', 'Harrison', '0123455110', 'lily.harrison@email.com', 90),
-/*new entries 2nd class*/
 ('Harper', 'Jones', '0123455113', 'harper.jones@email.com', 91),
 ('Samuel', 'Jones', '0123455224', 'samuel.jones@email.com', 91),
 ('Liam', 'Davis', '0123455345', 'liam.davis@email.com', 92),
@@ -616,183 +661,104 @@ VALUES
 
 INSERT INTO Lesson (length, instrument, PPS, schoolName)
 VALUES
-/*Sean Murphy Piano Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Piano', '123456789', 'Waterford Academy of Music and Art'),
-
-/*Aoife Guitar Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Guitar', '234567890', 'Waterford Academy of Music and Art'),	
-
-/*Ciarán Drum Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Drums', '345678901', 'Waterford Academy of Music and Art'),
-
-/*Niamh Trumpet Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Trumpet', '456789012', 'Waterford Academy of Music and Art'),
-
-/*Eoin Banjo Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Banjo', '567890123', 'Waterford Academy of Music and Art'),
-
-/*Sile Viola Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Viola', '678901234', 'Waterford Academy of Music and Art'), 
-
-/*Padraig Piano Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Piano', '789012345', 'Waterford Academy of Music and Art'),
-
-/*Aisling Voice Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Voice', '890123456', 'Waterford Academy of Music and Art'),
-
-/*Daragh Flute Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Flute', '901234567', 'Waterford Academy of Music and Art'),
-
-/*Grainne Ukulele Lessons*/
-/*tuesday 4pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 4:30pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 5pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 5:30pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art'),
-/*tuesday 6pm*/
 ('30 minutes', 'Ukulele', '012345678', 'Waterford Academy of Music and Art');
 
 INSERT INTO Attends(studentId, lessonCode, progress, lessonTime, lessonDay, lessonDate)
 VALUES
-/*piano*/
 ('1', '1', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('3', '2', 'More practice needed', '16:30', 'Tuesday', '2023-9-5'),
 ('10', '3', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('11', '4', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('12', '5', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
-/*guitar*/
 ('14', '6', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('16', '7', 'More practice needed', '16:30', 'Tuesday', '2023-9-5'),
 ('18', '8', 'Continues to improve', '17:00', 'Tuesday', '2023-9-5'),
 ('19', '9', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('20', '10', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
-/*drums*/
 ('21', '11', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('22', '12', 'Continues to improve', '16:30', 'Tuesday', '2023-9-5'),
 ('24', '13', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('25', '14', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('26', '15', 'Continues to improve', '18:00', 'Tuesday', '2023-9-5'),
-/*trumpet*/
 ('28', '16', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('29', '17', 'Good work', '16:30', 'Tuesday', '2023-9-5'),
 ('31', '18', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('32', '19', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('33', '20', 'Good work', '18:00', 'Tuesday', '2023-9-5'),
-/*banjo*/
 ('34', '21', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('36', '22', 'Excellent work', '16:30', 'Tuesday', '2023-9-5'),
 ('37', '23', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('38', '24', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('42', '25', 'No practice this week', '18:00', 'Tuesday', '2023-9-5'),
-/*viola*/
 ('43', '26', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('44', '27', 'Excellent work', '16:30', 'Tuesday', '2023-9-5'),
 ('45', '28', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('46', '29', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('47', '30', 'sight reading needs work', '18:00', 'Tuesday', '2023-9-5'),
-/*piano*/
 ('48', '31', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('51', '32', 'Ok work', '16:30', 'Tuesday', '2023-9-5'),
 ('52', '33', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('53', '34', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('54', '35', 'sight reading has improved', '18:00', 'Tuesday', '2023-9-5'),
-/*voice*/
 ('55', '36', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('56', '37', 'Ok work', '16:30', 'Tuesday', '2023-9-5'),
 ('58', '38', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('59', '39', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('60', '40', 'Well done', '18:00', 'Tuesday', '2023-9-5'),
-/*flute*/
 ('61', '41', 'Continues to improve', '16:00', 'Tuesday', '2023-9-5'),
 ('62', '42', 'Great work', '16:30', 'Tuesday', '2023-9-5'),
 ('63', '43', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
 ('64', '44', 'Continues to improve', '17:30', 'Tuesday', '2023-9-5'),
 ('65', '45', 'Excellent work this week', '18:00', 'Tuesday', '2023-9-5'),
-/*ukulele*/
 ('66', '46', 'Good work', '16:00', 'Tuesday', '2023-9-5'),
 ('67', '47', 'Great work', '16:30', 'Tuesday', '2023-9-5'),
 ('68', '48', 'Good work', '17:00', 'Tuesday', '2023-9-5'),
@@ -810,46 +776,33 @@ VALUES
 
 INSERT INTO groupLesson(groupSubject, length, groupSize, ageBracket, PPS, schoolName)
 VALUES
-/*wednesday 3pm Padraig*/
 ('Piano', '1 hour', '5', '2nd Class', '789012345', 'Waterford Academy of Music and Art'),
-/*wednesday 3pm Grainne*/
 ('Ukulele', '1 hour', '5', '2nd Class', '012345678', 'Waterford Academy of Music and Art'),
-/*wednesday 4pm Aoife*/
 ('Guitar', '1 hour', '5', '3rd Class', '234567890', 'Waterford Academy of Music and Art'),
-/*wednesday 5pm Pat*/
 ('Drama', '1 hour 30 minutes', '10', '5th year', '978654321', 'Waterford Academy of Music and Art'),
-/*wednesday 6:30pm Robyn*/
 ('Dance', '1 hour 30 minutes', '10', '5th year', '878654321', 'Waterford Academy of Music and Art'),
-/*thursday 3pm Aoife*/
 ('Guitar', '1 hour', '4', '4th Class', '234567890', 'Waterford Academy of Music and Art'),
- /*thursday 3pm Grainne*/
 ('Ukulele', '1 hour', '5', '4th Class', '012345678', 'Waterford Academy of Music and Art'),
-/*thursday 4pm Pat*/
 ('Drama', '1 hour 30 minutes', '9', '6th class', '978654321', 'Waterford Academy of Music and Art'),
-/*thursday 5:30pm Robyn*/
 ('Dance', '1 hour 30 minutes', '9', '6th class', '878654321', 'Waterford Academy of Music and Art');
 
 INSERT INTO Participates (studentId, groupCode, attendance, groupLessonTime, groupLessonDay, groupLessonDate)
 VALUES
-/*wed 3pm piano*/
 ('91', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('92', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('93', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('94', '1', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('95', '1', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
-/*wed 3pm ukulele*/
 ('96', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('97', '2', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
 ('98', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('99', '2', 'Present', '15:00', 'Wednesday', '2023-9-6'),
 ('100', '2', 'Absent', '15:00', 'Wednesday', '2023-9-6'),
-/*wed 4pm guitar*/
 ('4', '3', 'Present', '16:00', 'Wednesday', '2023-9-6'),
 ('5', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
 ('6', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
 ('15', '3', 'Present', '16:00', 'Wednesday', '2023-9-6'),
 ('17', '3', 'Absent', '16:00', 'Wednesday', '2023-9-6'),
-/*wed 5pm drama*/
 ('13', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('23', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
 ('27', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
@@ -860,7 +813,6 @@ VALUES
 ('41', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('49', '4', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('57', '4', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
-/*wed 6:30pm drama*/
 ('13', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('23', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
 ('27', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
@@ -871,18 +823,15 @@ VALUES
 ('41', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('49', '5', 'Present', '17:00', 'Wednesday', '2023-9-6'),
 ('57', '5', 'Absent', '17:00', 'Wednesday', '2023-9-6'),
-/*thurs 3pm guitar*/
 ('81', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('82', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('83', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('84', '6', 'Present', '15:00', 'Thursday', '2023-9-7'),
-/*thurs 3pm ukulele*/
 ('86', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('87', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('88', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('89', '7', 'Present', '15:00', 'Thursday', '2023-9-7'),
 ('90', '7', 'Absent', '15:00', 'Thursday', '2023-9-7'),
-/*thurs 4pm drama*/
 ('71', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
 ('72', '8', 'Absent', '16:00', 'Thursday', '2023-9-7'),
 ('73', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
@@ -893,7 +842,6 @@ VALUES
 ('78', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
 ('79', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
 ('80', '8', 'Present', '16:00', 'Thursday', '2023-9-7'),
-/*thurs 5:30pm dance*/
 ('71', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
 ('72', '9', 'Absent', '16:00', 'Thursday', '2023-9-7'),
 ('73', '9', 'Present', '16:00', 'Thursday', '2023-9-7'),
@@ -916,8 +864,6 @@ CREATE INDEX parentNameIndex ON Parent(firstName, lastName);
 CREATE INDEX instrumentIndex ON Lesson(instrument);
 
 CREATE INDEX subjectIndex ON groupLesson(groupSubject);
-
-CREATE INDEX ageBracketIndex ON groupLesson(ageBracket);
 
 DELIMITER //
 CREATE FUNCTION checkAgeBracket(DOB Date) RETURNS VARCHAR(50) DETERMINISTIC
@@ -1131,6 +1077,24 @@ WHERE
         WHERE
             Participates.studentId = Student.studentId)
 GROUP BY student.studentId , student.firstName , student.lastName , student.DOB , student.street , student.town , student.county;
+
+-- -----------------------------------------------------
+-- User creation
+-- -----------------------------------------------------
+
+DROP USER IF EXISTS 'WamaAdmin'@'%';
+DROP USER IF EXISTS 'WamaTeacher'@'%';
+    
+CREATE USER 'WamaAdmin' IDENTIFIED BY 'admin';
+CREATE USER 'WamaTeacher' IDENTIFIED BY 'teacher';
+
+GRANT ALL ON WAMA.* TO 'WamaAdmin' WITH GRANT OPTION;
+
+GRANT UPDATE (progress, lessonDate) ON WAMA.Attends TO 'WamaTeacher';
+GRANT UPDATE (attendance, groupLessonDate) ON WAMA.Participates TO 'WamaTeacher';
+GRANT SELECT ON WAMA.allGroupLessons TO 'WamaTeacher';
+GRANT SELECT ON WAMA.allLessons TO 'WamaTeacher';
+GRANT SELECT ON WAMA.examStudents TO 'WamaTeacher';
 
 COMMIT;
 
