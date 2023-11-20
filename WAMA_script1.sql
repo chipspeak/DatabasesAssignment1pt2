@@ -207,6 +207,28 @@ CREATE TABLE Attends (
 -- Triggers
 -- -----------------------------------------------------
 
+DELIMITER //
+CREATE TRIGGER beforeInsertNewTeacher
+BEFORE INSERT ON Teacher
+FOR EACH ROW
+BEGIN
+    DECLARE duplicates INT;
+
+    -- Check for duplicates
+    SELECT COUNT(*) INTO duplicates
+    FROM Teacher
+    WHERE PPS = NEW.PPS;
+
+    -- If duplicates found, prevent the insert
+    IF duplicates > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Duplicate entry: This PPS number is already present in the records.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+
 CREATE TABLE lessonProgress (
     reportId INT AUTO_INCREMENT PRIMARY KEY,
 	studentId INT,
@@ -926,10 +948,10 @@ SELECT
     Attends.lessonTime AS 'Time',
     Attends.lessonDay AS 'Day',
     Lesson.length AS 'Length',
-    Lesson.instrument AS 'Subject',
+    Lesson.instrument AS 'Instrument',
     GROUP_CONCAT(DISTINCT CONCAT(Teacher.firstName, ' ', Teacher.lastName)
         SEPARATOR ', ') AS 'Teacher Name',
-    Attends.progress
+    Attends.progress AS 'Progress'
 FROM
     Student
         JOIN
