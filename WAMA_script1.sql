@@ -207,37 +207,44 @@ CREATE TABLE Attends (
 -- Triggers
 -- -----------------------------------------------------
 
-DELIMITER //
+-- trigger to check values in a teacher insert and if names and address match an already existing teacher, throw a duplicate error.
+DELIMITER $$
 CREATE TRIGGER beforeInsertNewTeacher
 BEFORE INSERT ON Teacher
 FOR EACH ROW
 BEGIN
     DECLARE duplicates INT;
 
-    -- Check for duplicates
+    -- Checks for duplicates using COUNT
     SELECT COUNT(*) INTO duplicates
     FROM Teacher
-    WHERE PPS = NEW.PPS;
+    WHERE firstName = new.firstName AND
+	      lastName = new.lastName AND
+          street = new.street AND
+          town = new.town AND
+          county = new.county AND
+          zipCode = new.zipCode;
 
-    -- If duplicates found, prevent the insert
+    -- If duplicates are found an error is passed to the user and the insert is prevented
     IF duplicates > 0 THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Duplicate entry: This PPS number is already present in the records.';
+        SET MESSAGE_TEXT = 'Duplicate entry: This teacher is already present in the records.';
     END IF;
 END;
-//
+$$
 DELIMITER ;
 
-
+-- a table that will store previous progress columns from the Attends table
 CREATE TABLE lessonProgress (
     reportId INT AUTO_INCREMENT PRIMARY KEY,
-	studentId INT,
+    studentId INT,
     lessonCode INT,
     lessonDay VARCHAR(10),
     lessonDate DATE,
     progress TEXT
 );
 
+-- trigger that will store the previous progress column in a new table before an update occurs
 DELIMITER $$
 CREATE TRIGGER beforeLessonProgressUpdate  
     BEFORE UPDATE ON attends
@@ -253,8 +260,9 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- same logic as above table and trigger
 CREATE TABLE groupAttendance (
-	reportId INT AUTO_INCREMENT PRIMARY KEY,
+    reportId INT AUTO_INCREMENT PRIMARY KEY,
     studentId INT NOT NULL,
     groupCode INT NOT NULL,
     attendance VARCHAR(50) NOT NULL,
@@ -887,7 +895,20 @@ CREATE INDEX instrumentIndex ON Lesson(instrument);
 
 CREATE INDEX subjectIndex ON groupLesson(groupSubject);
 
-DELIMITER //
+CREATE INDEX groupLessonDayIndex ON Participates(groupLessonday);
+
+CREATE INDEX lssonDayIndex ON Attends(lessonDay);
+
+CREATE INDEX attendsStudent ON Attends(studentId);
+
+CREATE INDEX participateStudent ON Participates(studentId);
+
+-- -----------------------------------------------------
+-- Function
+-- -----------------------------------------------------
+
+-- function to check DOB relative to current date and then sort into specific age bracket based on results
+DELIMITER $$ 
 CREATE FUNCTION checkAgeBracket(DOB Date) RETURNS VARCHAR(50) DETERMINISTIC
 BEGIN
 	DECLARE ageBracket VARCHAR(50);
@@ -908,14 +929,14 @@ BEGIN
         ELSE SET ageBracket = 'Adult';
         END CASE;
         RETURN ageBracket;
-	END //
+	END $$
 DELIMITER ;
 
 -- -----------------------------------------------------
 -- Views
 -- -----------------------------------------------------
 
--- Vew to display all students on record whether attending classes or not
+-- View to display all students on record whether attending classes or not
 CREATE VIEW allStudentsOnRecord AS
 SELECT 
     student.studentId AS 'Student ID',
