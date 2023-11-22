@@ -6,23 +6,23 @@ SELECT * FROM allTeachers WHERE Name = 'Robyn Walsh';
 -- select all group lessons using the Age Bracket column as a filter
 SELECT * FROM allGroupLessons WHERE `Age Bracket` = '5th year';
 
--- select all from Teacher table and group by firstName
-SELECT * FROM Teacher GROUP BY firstName;
+-- select all from Teacher table by firstName
+SELECT firstName FROM Teacher;
 
 -- select all from attends
 SELECT * FROM attends;
 
 -- updates progress column in Attends table using studentId and lessonCode foreign keys
-UPDATE attends set progress = 'Found bar 17 tricky but good work regardless' WHERE studentId = '1' AND lessonCode = '1';
+UPDATE attends SET progress = 'Found bar 17 tricky but good work regardless' WHERE studentId = '1' AND lessonCode = '1';
 
 -- select all from lessonProgress table (this table is used via a trigger to record previous lesson progress after update)
 SELECT * FROM lessonProgress;
 
--- select all from groupAttendance table(again, this table is used via a trigger where previous values are added to this table as a record)
-SELECT * FROM groupAttendance;
-
 -- similar to lessonProgress, this will update the attendance column of the Participates table using studentId and groupCode foreign keys
 UPDATE participates set attendance = 'arrived late' WHERE studentId = '4' AND groupCode = '3';
+
+-- select all from groupAttendance table(again, this table is used via a trigger where previous values are added to this table as a record)
+SELECT * FROM groupAttendance;
 
 -- insert to test the trigger preventing duplicates based on matching names and address but different PPS
 INSERT INTO Teacher (PPS, firstName, lastName, street, town, county, zipCode, hourlyRate, managerPPS)

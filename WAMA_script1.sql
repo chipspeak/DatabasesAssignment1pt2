@@ -239,6 +239,7 @@ CREATE TABLE lessonProgress (
     reportId INT AUTO_INCREMENT PRIMARY KEY,
     studentId INT,
     lessonCode INT,
+    lessonTime VARCHAR(5),
     lessonDay VARCHAR(10),
     lessonDate DATE,
     progress TEXT
