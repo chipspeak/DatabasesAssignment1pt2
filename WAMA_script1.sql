@@ -7,7 +7,6 @@ DROP SCHEMA IF EXISTS WAMA;
 -- Create 'WAMA' database/schema and use this database
 -- -----------------------------------------------------
 
-
 CREATE SCHEMA IF NOT EXISTS WAMA;
 
 USE WAMA;
@@ -213,9 +212,8 @@ CREATE TRIGGER beforeInsertNewTeacher
 BEFORE INSERT ON Teacher
 FOR EACH ROW
 BEGIN
-    DECLARE duplicates INT;
-
-    -- Checks for duplicates using COUNT
+    DECLARE duplicates INT; 
+    -- Checks for duplicates using COUNT. If matches are found the value of the duplicates INT increases
     SELECT COUNT(*) INTO duplicates
     FROM Teacher
     WHERE firstName = new.firstName AND
@@ -224,8 +222,7 @@ BEGIN
           town = new.town AND
           county = new.county AND
           zipCode = new.zipCode;
-
-    -- If duplicates are found an error is passed to the user and the insert is prevented
+    -- If duplicates is anything other than zero i.e a duplicates was found error is relayed to user and insert is stopped
     IF duplicates > 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Duplicate entry: This teacher is already present in the records.';
@@ -290,6 +287,8 @@ DELIMITER ;
 -- -----------------------------------------------------
 -- Data input
 -- -----------------------------------------------------
+
+-- deletes as part of script along with resetting auto increments in aid of being able to run the script for tests multiple times
 
 DELETE FROM TeacherEmails;
 DELETE FROM TeacherPhones;

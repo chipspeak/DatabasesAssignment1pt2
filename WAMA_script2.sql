@@ -24,7 +24,7 @@ UPDATE participates set attendance = 'arrived late' WHERE studentId = '4' AND gr
 -- select all from groupAttendance table(again, this table is used via a trigger where previous values are added to this table as a record)
 SELECT * FROM groupAttendance;
 
--- insert to test the trigger preventing duplicates based on matching names and address but different PPS
+-- insert to test the trigger preventing duplicates based on matching names and address but different PPS. Note that this will obviously cause an error as is intended and this is not an unintentional error
 INSERT INTO Teacher (PPS, firstName, lastName, street, town, county, zipCode, hourlyRate, managerPPS)
 VALUES
 ('234567891', 'Aoife', 'O\'Sullivan', '2 Sea View', 'Dungarvan', 'Waterford', 'DUN5678', '25.00', '123456789');
